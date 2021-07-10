@@ -1,0 +1,51 @@
+.app {
+}
+
+.sheet {	
+	overflow: auto;
+	white-space: nowrap;
+}
+.sheet-col {
+	display: inline-block;
+}
+.sheet-col-indicator {	
+	width: 60px;
+	height: 30px;
+	font-weight: 900;
+	text-align: center;		
+}
+.sheet-row-indicator {
+	font-weight: 900;
+	text-align: center;
+
+}
+.sheet-footer {
+	display: flex;
+	justify-content: space-evenly;
+	position: fixed;
+	bottom: 0;
+	background-color: rgb(187, 184, 184);
+	height: 50px;
+	width: 100%;
+	color: black;
+}
+
+.cell {
+	border: 0.4px solid #1b702a;
+	width: 60px;
+	height: 40px;
+	cursor: pointer;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	margin-left: 10px;
+	text-overflow: clip;
+	overflow-x: scroll;
+}
+
+.cell:hover {
+	background-color: #dad5d5;
+}
+.cell-is-selected {
+	border: 1px solid green;
+}
