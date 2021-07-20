@@ -1,3 +1,6 @@
+const COLS = 26;
+const ROWS = 100;
+
 const charMap = {
 	1: "A",
 	2: "B",
@@ -36,6 +39,10 @@ const getXandY = (str) => {
     return str.split('x');
 }
 
+const getCellFromXandY = (x, y) => {
+    return `${x}x${y}`;
+}
+
 const getSelectedCells = (s, e) => {
     if (!s || !e) return;
 
@@ -46,7 +53,6 @@ const getSelectedCells = (s, e) => {
 
     sx = parseInt(sx);
     sy = parseInt(sy);
-
 
     let cells = [];
 
@@ -88,6 +94,28 @@ const getSelectedCells = (s, e) => {
     return cells;
 }
 
+const getNeighbours = cell => {
+    //if cell is 8x3
+    //left is 7x3
+    //up is 8x2
+    //right is 9x3
+    //down is 8x4
+    let [x, y] = getXandY(cell);
+
+    if (x > COLS || y > ROWS) return;
+
+    left = x == 1 ? null : getCellFromXandY(+x - 1, y); 
+    up = y == 1 ? null : getCellFromXandY(x, +y - 1);
+    right = x == COLS ? null : getCellFromXandY(+x + 1, y);
+    down = y == ROWS ? null : getCellFromXandY(x, +y + 1);
+    
+    return {
+        left,
+        up,
+        right,
+        down
+    }
+}
 //  const startPoint = "8x3";
  // const endPoint = "19x9";
 //

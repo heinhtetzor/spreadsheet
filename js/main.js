@@ -1,22 +1,58 @@
 let startPoint = null;
 let endPoint = null;
 
+//for traversing with arrow keys
+let selectedCell = {	
+	// neighbours
+	dom: null,
+	left: null,
+	up: null,
+	right: null,
+	down: null,
+}; 
+
 let cellDomMap = new Map();
 let selectedCellDomMap = new Map();
 
 let sumEle;
 let avgEle;
 
+const isAlreadySelected = (cell) => {
+	return selectedCellDomMap.has(cell);
+}
+
+const setNeighbours = cellEle => {			
+	selectedCell.dom = cellEle;	
+
+	let { left, up, right, down } = getNeighbours(cellEle.dataset['id']);
+	console.log(down)
+
+	selectedCell.left = cellDomMap.get(left).dom;
+	selectedCell.up = cellDomMap.get(up).dom;
+	selectedCell.right = cellDomMap.get(right).dom;
+	selectedCell.down = cellDomMap.get(down).dom;	
+}
 
 //cell event listeners
 const onMouseDownCell = e => {
-	resetSelection();
 	const id = e.target.dataset['id'];
+	// check if a cell is selected before resetting selection
+	// if selected, turn on edit mode	
+	if (isAlreadySelected(id)) {		
+		e.target.classList.add('cell-is-editable');
+		e.target.style.webkitUserSelect = 'text';	
+		e.target.contentEditable =  true;
+	}
+
+	resetSelection();
+
+	setNeighbours(e.target);
+	// selectedCell.dom = e.target;
+
 	startPoint = id;
-	const selectedCells = getSelectedCells(startPoint, startPoint);
+	const selectedCells = getSelectedCells(startPoint, startPoint);	
 
 	performSelection(selectedCells);
-
 }
 
 const onMouseEnterCell = e => {
@@ -32,13 +68,14 @@ const onMouseEnterCell = e => {
 
 	performSelection(selectedCells);
 
-	e.target.classList.add('cell-is-selected')
+	e.target.classList.add('cell-is-selected');
 }
 
 const onMouseUpCell = () => {
 	startPoint = null;
 	endPoint = null;	
 }
+
 
 const onDblClickCell = e => {
 	//safari fix
@@ -51,6 +88,7 @@ const onDblClickCell = e => {
 const onBlurCell = e => {
 	if (e.target.contentEditable) {
 		e.target.style.userSelect = 'none';
+		e.target.classList.remove('cell-is-editable');
 		e.target.style.webkitUserSelect = 'none';
 		e.target.contentEditable = false;
 	}
@@ -60,11 +98,22 @@ const onEnterKeyCell = e => {
 	if (e.keyCode === 13) {
 		resetSelection();
 		e.target.contentEditable = false;
+		//move to down
+		setNeighbours(selectedCell.down);		
+		const selectedCells = getSelectedCells(selectedCell.down.dataset['id'], selectedCell.down.dataset['id']);		
+
+		performSelection(selectedCells);
+
 		return;		
 	}
 }
 
 //cell event listeners end
+const resetEditableMode = () => {
+	selectedCellDomMap.forEach(x => {
+		x.dom.classList
+	})
+}
 
 const resetSelection = () => {
 	sumEle.innerText = 0;
@@ -101,9 +150,6 @@ const performSelection = (cells) => {
 
 	})
 }
-
-
-
 
 const createSheet = (cols, rows) => {
 	const sheet = document.createElement('sheet');
@@ -155,7 +201,7 @@ const createSheet = (cols, rows) => {
 			cell.addEventListener('blur', onBlurCell);
 			cell.addEventListener('keypress', onEnterKeyCell);
 
-			cell.innerText = ``;
+			cell.innerText = `${id}`;
 			cellDomMap.set(id, {
 				dom: cell,
 				innerText: cell.innerText,
@@ -204,7 +250,7 @@ const createFooter = () => {
 window.addEventListener('load', () => {
 	const app = document.querySelector('.app');
 
-	const sheet =  createSheet(26, 100);
+	const sheet =  createSheet(COLS, ROWS);
 	const footer =  createFooter();
 
 	app.appendChild(sheet);
