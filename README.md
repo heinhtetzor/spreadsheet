@@ -5,3 +5,6 @@
 - cell multiple selection
 - cell movement with arrow keys
 - calculation of sum and average of selected cells
+
+## Todo
+- formula with equal sign
