@@ -1,6 +1,6 @@
-###Simple Spreadsheet Program
+### Simple Spreadsheet Program
 
-##Highlights
+## Highlights
 - written in plain javascript, css and html
 - cell multiple selection
 - cell movement with arrow keys
